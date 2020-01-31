@@ -44,7 +44,7 @@ namespace OAuthCore
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            //IAuthenticationService
             services.AddAuthentication(authOptions =>
             {
                 authOptions.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -52,6 +52,16 @@ namespace OAuthCore
                 authOptions.DefaultChallengeScheme = "GitHub";
             })
             .AddCookie()
+
+            .AddGoogle("Google", opts =>
+             {
+                 opts.ClientId = "";
+                 opts.ClientSecret = "";
+                 opts.CallbackPath = new PathString("");
+             })
+             .AddJwtBearer("Jwt", opts =>
+              {
+              })
             .AddOAuth("GitHub", options =>
             {
                 options.ClientId = Configuration["GitHub:ClientId"];
@@ -100,6 +110,7 @@ namespace OAuthCore
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
